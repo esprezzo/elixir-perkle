@@ -22,8 +22,11 @@ defmodule Perkle.ABI do
   @spec encode_event(binary()) :: binary()
   @doc "Encodes event based on signature"
   def encode_event(signature) do
-    :keccakf1600.sha3_256(signature) |> Base.encode16(case: :lower)
+    with {:ok, hash} <- ExKeccak.hash_256(signature),
+         {:ok, encoded} <- Base.encode16(hash, case: :lower),
+        do: {:ok, encoded}
   end
+
 
   @spec encode_data(binary(), list()) :: binary()
   @doc "Encodes data into Ethereum hex string based on types signature"
