@@ -77,8 +77,7 @@ defmodule Perkle.ABI do
   @doc "Returns the 4 character method id based on the hash of the method signature"
   def method_signature(abi, name) do
     if abi[name] do
-      input_signature = "#{name}#{types_signature(abi, name)}" |> :keccakf1600.sha3_256()
-
+      {:ok, input_signature} = "#{name}#{types_signature(abi, name)}" |> ExKeccak.hash_256()
       # Take first four bytes
       <<init::binary-size(4), _rest::binary>> = input_signature
       init
