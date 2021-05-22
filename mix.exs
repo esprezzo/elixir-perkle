@@ -48,7 +48,7 @@ defmodule Perkle.Mixfile do
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
  		  {:ex_doc, "~> 0.14", only: :dev},
       {:ex_abi, "~> 0.5.1"},
-      {:ex_keccak, "~> 0.1.2"},
+      {:ex_keccak, git: "https://github.com/alanwilhelm/ex_keccak.git"},
    ]
   end
 end
