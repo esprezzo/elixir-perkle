@@ -4,7 +4,7 @@ defmodule Perkle.Mixfile do
   def project do
     [app: :perkle,
      version: "0.1.0",
-     elixir: "~> 1.4",
+     elixir: "~> 1.11",
      package: package(),
      description: description(),
      name: "Perkle",
@@ -48,7 +48,7 @@ defmodule Perkle.Mixfile do
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
  		  {:ex_doc, "~> 0.14", only: :dev},
       {:ex_abi, "~> 0.5.1"},
-      {:ex_keccak, git: "https://github.com/alanwilhelm/ex_keccak.git"},
+      {:ex_keccak, git: "https://github.com/alanwilhelm/ex_keccak.git", override: true},
    ]
   end
 end
