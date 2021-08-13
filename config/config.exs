@@ -1,5 +1,3 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
 # This configuration is loaded before any dependency and is restricted
@@ -9,31 +7,5 @@ use Mix.Config
 # 3rd-party users, it should be done in your "mix.exs" file.
 
 # You can configure for your application as:
-#
-  config :perkle, perkle_rpc_url: System.get_env("PERKLE_HOST")
-# config can be overridden by environment
-# System.get_env("PERKLE_HOST")
-# System.get_env("PERKLE_PORT")
-# System.get_env("PERKLE_API_KEY")
-# System.get_env("PERKLE_API_SECRET")
-# System.get_env("PERKLE_API_TIMEOUT")
-# System.get_env("PERKLE_API_RECV_TIMEOUT") 
-# System.get_env("PERKLE_USE_SSL")
-
-#
-# And access this configuration in your application as:
-#
-#     Application.get_env(:perkle, :perkle_rpc_url)
-#
-# Or configure a 3rd-party app:
-#
-#     config :logger, level: :info
-#
-
-# It is also possible to import configuration files, relative to this
-# directory. For example, you can emulate configuration per environment
-# by uncommenting the line below and defining dev.exs, test.exs and such.
-# Configuration from the imported file will override the ones defined
-# here (which is why it is important to import them last).
-#
-#     import_config "#{Mix.env}.exs"
+config :tesla, adapter: Tesla.Adapter.Hackney
+config :perkle, perkle_rpc_url: System.get_env("PERKLE_HOST")
