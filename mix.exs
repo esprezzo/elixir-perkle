@@ -42,6 +42,7 @@ defmodule Perkle.Mixfile do
 
   defp deps do
     [
+      {:tesla, "~> 1.4.0"},
       {:ex_keccak, "~> 0.2.0"},
       {:httpoison, "~> 1.6"},
       {:poison, "~> 3.0"},
@@ -49,6 +50,7 @@ defmodule Perkle.Mixfile do
       {:ex_abi, "~> 0.5.5"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.14", only: :dev},
+      {:hackney, "~> 1.17"},
    ]
   end
 end
