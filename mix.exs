@@ -4,7 +4,7 @@ defmodule Perkle.Mixfile do
   def project do
     [app: :perkle,
      version: "0.1.0",
-     elixir: "~> 1.11",
+     elixir: "~> 1.12",
      package: package(),
      description: description(),
      name: "Perkle",
