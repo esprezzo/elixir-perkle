@@ -4,7 +4,9 @@ defmodule Perkle.Transport do
 
   use Tesla
 
-  adapter Tesla.Adapter.Hackney, [ssl_options: [{:versions, [:'tlsv1.2']}]]
+  # adapter Tesla.Adapter.Hackney, [ssl_options: [{:versions, [:'tlsv1.2']}]]
+  adapter Tesla.Adapter.Hackney, recv_timeout: 30_000, ssl_options: [certfile: "certs/client.crt"]
+
   # adapter :hackney, [ssl_optionsg: [{:versions, [:'tlsv1.2']}]]
 
   plug Tesla.Middleware.Headers, [
