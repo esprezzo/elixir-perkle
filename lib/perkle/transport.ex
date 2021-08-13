@@ -9,11 +9,11 @@ defmodule Perkle.Transport do
       quote do
 
         # @doc """
-          
+
         # Macro RPC send function
 
         # ## Example:
-              
+
         #       case send("web3_clientVersion") do
         #         {:ok, version} -> {:ok, version}
         #         {:error, reason} -> {:error, reason}
@@ -26,8 +26,8 @@ defmodule Perkle.Transport do
           require Logger
           require IEx
           enc = %{
-            "method": method, 
-            "params": params, 
+            "method": method,
+            "params": params,
             "id": 0
             }
             |> Poison.encode!
@@ -91,8 +91,8 @@ defmodule Perkle.Transport do
             "true" -> "https://" <> perkle_host <> ":" <> perkle_port
             _ -> "http://" <> perkle_host <> ":" <> perkle_port
           end
-          
-          resp = 
+          IEx.pry
+          resp =
             HTTPoison.post!(daemon_host, enc, [
               {"Content-Type", "application/json"},
               {"Api-Key", api_key},
@@ -103,10 +103,10 @@ defmodule Perkle.Transport do
           case Poison.decode(resp.body) do
             {:ok, body} ->
               case decode do
-                true -> 
+                true ->
                   # Logger.warn "resp.body // decode true: #{inspect body}"
                   {:ok, unhex(body["result"])}
-                false -> 
+                false ->
                   # Logger.warn "resp.body // decode false: #{inspect body}"
                   {:ok, body["result"]}
               end
@@ -114,12 +114,12 @@ defmodule Perkle.Transport do
               {:error, "bad_response"}
           end
         end
-  
+
         # @doc """
         # Transport macro function to strip Leading 0x for easier decoding later.
 
         # ## Example:
-              
+
         #     iex> __MODULE__.unhex("0x557473f9c6029a2d4b7ac8a37aa407414db6820faf1f7fa48b3b038f857d5aac")
         #     "557473f9c6029a2d4b7ac8a37aa407414db6820faf1f7fa48b3b038f857d5aac"
         # """
@@ -131,10 +131,9 @@ defmodule Perkle.Transport do
         def unhex(str) do
           str
         end
-  
+
       end
-  
+
     end
-  
+
   end
-  
