@@ -43,9 +43,7 @@ defmodule Perkle.Transport do
         port
     end
 
-
     # Requires --rpcvhosts=* on Eth Daemon - TODO: Clean up move PORT to run script
-
     daemon_host = case System.get_env("PERKLE_USE_SSL") do
       "true" ->
          "https://" <> ethereum_host <> ":" <> ethereum_port
@@ -54,6 +52,7 @@ defmodule Perkle.Transport do
     Logger.info "PERKLE DAEMON_HOST: #{daemon_host}"
 
     {:ok, encoded} = Jason.encode(enc)
+    IEx.pry
     result =
       __MODULE__.post!(daemon_host, encoded)
       |> Map.get(:body)
