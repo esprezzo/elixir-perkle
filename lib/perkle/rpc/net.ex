@@ -2,7 +2,7 @@ defmodule Perkle.Net do
   @moduledoc """
   Net Namespace for Perkle JSON-RPC
   """
-  require Perkle.Transport
+  alias Perkle.Transport
 
   @doc """
   Show version of network
@@ -15,7 +15,7 @@ defmodule Perkle.Net do
   """
   @spec version :: {:ok, float} | {:error, String.t}
   def version do
-    case __MODULE__.send("net_version",[]) do
+    case Transport.send("net_version",[]) do
       {:ok, version} ->
         {:ok, version}
       {:error, reason} ->
@@ -34,7 +34,7 @@ defmodule Perkle.Net do
   """
   @spec peer_count :: {:ok, integer} | {:error, String.t}
   def peer_count do
-    case __MODULE__.send("net_peerCount",[]) do
+    case Transport.send("net_peerCount",[]) do
       {:ok, count} ->
         count
         |> Hexate.to_integer
@@ -56,7 +56,7 @@ defmodule Perkle.Net do
   """
   @spec listening :: {:ok, boolean} | {:error, String.t}
   def listening do
-    case __MODULE__.send("net_listening",[]) do
+    case Transport.send("net_listening",[]) do
       {:ok, response} ->
         {:ok, response}
       {:error, reason} ->

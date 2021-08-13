@@ -1,22 +1,22 @@
 defmodule Perkle.Web3 do
   @moduledoc """
   Web3 Namespace Functions for Perkle JSON-RPC
-  """  
-  use Perkle.Transport
+  """
+  alias Perkle.Transport
   require IEx
   @doc """
-    
+
   Displays client_version of Ethereum node.
 
   ## Example:
 
       iex> Perkle.client_version()
       {:ok, "Geth/v1.6.5-stable-cf87713d/darwin-amd64/go1.8.3"}
-      
+
   """
   @spec client_version :: {:ok, String.t} | {:error, String.t}
   def client_version do
-    case send("web3_clientVersion") do
+    case Transport.send("web3_clientVersion") do
       {:ok, version} ->
         {:ok, version}
       {:error, reason} ->
@@ -37,7 +37,7 @@ defmodule Perkle.Web3 do
   """
   @spec sha3(String.t) :: {:ok, float} | {:error, String.t}
   def sha3(str) do
-    case __MODULE__.send("web3_sha3",[str]) do
+    case Transport.send("web3_sha3",[str]) do
       {:ok, sha} ->
         {:ok, sha}
       {:error, reason} ->
@@ -54,10 +54,10 @@ defmodule Perkle.Web3 do
       data
       |> String.slice(2..-1)
       |> Base.decode16!(case: :lower)
-      
+
     fs = ABI.FunctionSelector.decode(signature)
 
     ABI.TypeDecoder.decode(formatted_data, fs)
   end
-  
+
 end
