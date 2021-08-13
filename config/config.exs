@@ -7,5 +7,5 @@ use Mix.Config
 # 3rd-party users, it should be done in your "mix.exs" file.
 
 # You can configure for your application as:
-config :tesla, adapter: Tesla.Adapter.Hackney
+config :tesla, :adapter, {Tesla.Adapter.Hackney, insecure: true}
 config :perkle, perkle_rpc_url: System.get_env("PERKLE_HOST")
