@@ -57,7 +57,7 @@ defmodule Perkle.Transport do
       __MODULE__.post!(daemon_host, encoded)
       |> Map.get(:body)
       |> Map.get("result")
-
+    IEx.pry
     Logger.warn "#{inspect result}"
 
     result =
