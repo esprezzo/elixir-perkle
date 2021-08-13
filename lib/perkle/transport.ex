@@ -54,7 +54,7 @@ defmodule Perkle.Transport do
     Logger.info "PERKLE DAEMON_HOST: #{daemon_host}"
 
     {:ok, encoded} = Jason.encode(enc)
-    IEx.pry
+
     result =
       __MODULE__.post!(daemon_host, encoded)
       |> Map.get(:body)
