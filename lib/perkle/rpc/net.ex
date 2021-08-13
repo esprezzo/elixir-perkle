@@ -2,16 +2,16 @@ defmodule Perkle.Net do
   @moduledoc """
   Net Namespace for Perkle JSON-RPC
   """
-  use Perkle.Transport
+  require Perkle.Transport
 
   @doc """
   Show version of network
-      
+
   ## Example:
 
       iex> Perkle.version()
       {:ok, "1"}
- 
+
   """
   @spec version :: {:ok, float} | {:error, String.t}
   def version do
@@ -27,7 +27,7 @@ defmodule Perkle.Net do
   Show network version identifier
 
   ## Example:
-      
+
       iex> Perkle.peer_count
       {:ok, "19"}
 
@@ -47,9 +47,9 @@ defmodule Perkle.Net do
 
   @doc """
   Display node listening status
-  
+
   ## Example:
-      
+
       iex> Perkle.listening
       {:ok, true}
 
