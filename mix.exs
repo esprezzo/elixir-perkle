@@ -42,13 +42,13 @@ defmodule Perkle.Mixfile do
 
   defp deps do
     [
+      {:ex_keccak, "~> 0.2.0"},
       {:httpoison, "~> 1.6"},
       {:poison, "~> 3.0"},
       {:hexate,  ">= 0.6.0"},
+      {:ex_abi, "~> 0.5.5"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
- 		  {:ex_doc, "~> 0.14", only: :dev},
-      {:ex_abi, "~> 0.5.1"},
-      {:ex_keccak, git: "https://github.com/alanwilhelm/ex_keccak.git", override: true},
+      {:ex_doc, "~> 0.14", only: :dev},
    ]
   end
 end
