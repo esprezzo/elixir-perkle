@@ -27,7 +27,7 @@ defmodule Perkle.Mixfile do
     [
       name: :perkle,
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Alan Wilhelm"],
+      maintainers: ["AW"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/esprezzo/elixir-perkle"}
     ]
@@ -42,7 +42,7 @@ defmodule Perkle.Mixfile do
 
   defp deps do
     [
-      {:tesla, "~> 1.4.0"},
+      {:tesla, "~> 1.4"},
       {:ex_keccak, "~> 0.2.0"},
       {:httpoison, "~> 1.6"},
       {:poison, "~> 3.0"},

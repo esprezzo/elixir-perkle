@@ -32,7 +32,7 @@ defmodule Perkle.Transport do
         # Logger.error "PERKLE_HOST ENVIRONMENT VARIABLE NOT SET. Using 127.0.0.1"
         "127.0.0.1"
       url ->
-        # Logger.info "PERKLE_HOST ENVIRONMENT VARIABLE SET. Using #{url}"
+        Logger.info "PERKLE_HOST ENVIRONMENT VARIABLE SET. Using #{url}"
         url
     end
 
@@ -59,7 +59,7 @@ defmodule Perkle.Transport do
       __MODULE__.post!(daemon_host, encoded)
       |> Map.get(:body)
       |> Map.get("result")
-    IEx.pry
+
     Logger.warn "#{inspect result}"
 
     result =
