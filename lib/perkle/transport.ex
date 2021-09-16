@@ -32,13 +32,13 @@ defmodule Perkle.Transport do
         # Logger.error "PERKLE_HOST ENVIRONMENT VARIABLE NOT SET. Using 127.0.0.1"
         "127.0.0.1"
       url ->
-        Logger.info "PERKLE_HOST ENVIRONMENT VARIABLE SET. Using #{url}"
+        # Logger.info "PERKLE_HOST ENVIRONMENT VARIABLE SET. Using #{url}"
         url
     end
 
     ethereum_port = case System.get_env("PERKLE_PORT") do
       nil ->
-        Logger.error "PERKLE_PORT ENVIRONMENT VARIABLE NOT SET. Using 8545"
+        # Logger.error "PERKLE_PORT ENVIRONMENT VARIABLE NOT SET. Using 8545"
         8545
       port ->
         # Logger.info "PERKLE_PORT ENVIRONMENT VARIABLE SET. Using #{port}"
@@ -51,7 +51,7 @@ defmodule Perkle.Transport do
          "https://" <> ethereum_host <> ":" <> ethereum_port
       _ -> "http://" <> ethereum_host <> ":" <> ethereum_port
     end
-    Logger.info "PERKLE DAEMON_HOST: #{daemon_host}"
+    # Logger.info "PERKLE DAEMON_HOST: #{daemon_host}"
 
     {:ok, encoded} = Jason.encode(enc)
 
@@ -60,7 +60,7 @@ defmodule Perkle.Transport do
       |> Map.get(:body)
       |> Map.get("result")
 
-    Logger.warn "#{inspect result}"
+    # Logger.warn "#{inspect result}"
 
     result =
       case dehex do

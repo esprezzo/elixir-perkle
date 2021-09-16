@@ -17,13 +17,15 @@ defmodule Perkle.Eth do
       Perkle.get_balance("0xfE8bf4ca8A6170E759E89EDB5cc9adec3e33493f")
       {:ok, 0.4650075166583676}
   """
-  @spec get_balance(String.t) :: {:ok, float} | {:error, String.t}
-  def get_balance(account_hash) do
+  @spec get_balance(String.t, bool()) :: {:ok, float} | {:error, String.t}
+  def get_balance(account_hash, convert \\ false) do
     case Transport.send("eth_getBalance",[account_hash, "latest"]) do
       {:ok, wei_val} ->
-        ether_val = wei_val
-        |> Hexate.to_integer
-        |> Conversion.wei_to_eth
+        ether_val =
+          case convert do
+            true -> wei_val |> Hexate.to_integer |> Conversion.wei_to_eth()
+            false -> wei_val |> Hexate.to_integer
+          end
         {:ok, ether_val}
       {:error, reason} ->
         {:error, reason}

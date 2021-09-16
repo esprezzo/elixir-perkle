@@ -63,7 +63,7 @@ defmodule Perkle.ABI do
        |> Base.encode16(case: :lower)
        |> String.trim_leading("0"))
   end
-  
+
   @spec encode_method_call(map(), binary(), list()) :: binary()
   @doc "Encodes data and appends it to the encoded method id"
   def encode_method_call(abi, name, input) do
@@ -77,8 +77,9 @@ defmodule Perkle.ABI do
   @doc "Returns the 4 character method id based on the hash of the method signature"
   def method_signature(abi, name) do
     if abi[name] do
-      {:ok, input_signature} = "#{name}#{types_signature(abi, name)}" |> ExKeccak.hash_256()
+      input_signature = "#{name}#{types_signature(abi, name)}" |> ExKeccak.hash_256()
       # Take first four bytes
+
       <<init::binary-size(4), _rest::binary>> = input_signature
       init
     else
@@ -93,7 +94,7 @@ defmodule Perkle.ABI do
     types_signature = Enum.join(["(", Enum.join(input_types, ","), ")"])
     types_signature
   end
-  
+
   # ABI mapper
   defp map_abi(x) do
     case {x["name"], x["type"]} do
@@ -113,7 +114,7 @@ defmodule Perkle.ABI do
   @spec decode_output(map(), binary(), binary()) :: list()
   @doc "Decodes output based on specified functions return signature"
   def decode_output(abi, name, output) do
- 
+
     {:ok, trim_output} =
       String.slice(output, 2..String.length(output)) |> Base.decode16(case: :lower)
     decoded = output |> Base.decode16(case: :lower)
@@ -121,7 +122,7 @@ defmodule Perkle.ABI do
     # types_signature = Enum.join(["(", Enum.join(output_types, ","), ")"])
     types_signature = Enum.join([Enum.join(output_types, ",")])
     output_signature = "#{name}(#{types_signature})"
-    
+
     outputs =
       ABI.decode(output_signature, trim_output)
       # |> List.first()

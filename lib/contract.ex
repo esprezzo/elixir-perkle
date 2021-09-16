@@ -107,7 +107,7 @@ defmodule Perkle.Contract do
     end
 
     defp init_events(abi) do
-      
+
       events =
         Enum.filter(abi, fn {_, v} ->
           v["type"] == "event"
@@ -213,7 +213,6 @@ defmodule Perkle.Contract do
     end
 
     def eth_call_helper(address, abi, method_name, args) do
-     
       result =
         Perkle.eth_call([
           %{
@@ -221,9 +220,8 @@ defmodule Perkle.Contract do
             data: "0x#{Perkle.encode_abi_method_call(abi, method_name, args)}"
           }
         ])
-      
       case result do
-        {:ok, data} -> 
+        {:ok, data} ->
           ([:ok] ++ Perkle.decode_abi_output(abi, method_name, data)) |> List.to_tuple()
         {:error, err} -> {:error, err}
       end
@@ -363,14 +361,14 @@ defmodule Perkle.Contract do
     end
 
     defp format_log_data(log, event_attributes) do
-      
+
       non_indexed_fields =
         extract_non_indexed_fields(
           Map.get(log, "data"),
           event_attributes[:non_indexed_names],
           event_attributes[:signature]
         )
-  
+
       indexed_fields =
         if length(log["topics"]) > 1 do
           [_head | tail] = log["topics"]
@@ -379,7 +377,7 @@ defmodule Perkle.Contract do
               topic_type = Enum.at(event_attributes[:topic_types], i)
               topic_data = Enum.at(tail, i)
               case topic_type do
-                "(address)" -> 
+                "(address)" ->
                   Perkle.unhex(topic_data)
                   |> Perkle.to_hex()
                 other -> Perkle.decode_abi_data(topic_type, topic_data)
@@ -410,7 +408,7 @@ defmodule Perkle.Contract do
           event_data_format_helper(event_data)
         )
       # Logger.warn "Event payload #{inspect payload}"
-      
+
       {:ok, filter_id} = Perkle.new_filter(payload)
 
       {:reply, {:ok, filter_id},
@@ -462,7 +460,7 @@ defmodule Perkle.Contract do
         get_event_attributes(state, filter_info[:contract_name], filter_info[:event_name])
 
       {:ok, logs} = Perkle.get_filter_changes(filter_id)
-      
+
       Logger.warn "handle_call({:get_filter_changes)"
       formatted_logs =
         if logs != [] do
@@ -512,7 +510,7 @@ defmodule Perkle.Contract do
 
     def handle_call({:call, {contract_name, method_name, args}}, _from, state) do
       contract_info = state[contract_name]
-      
+
       with {:ok, address} <- check_option(contract_info[:address], :missing_address) do
         result = eth_call_helper(address, contract_info[:abi], Atom.to_string(method_name), args)
         {:reply, result, state}
@@ -546,7 +544,7 @@ defmodule Perkle.Contract do
     def handle_info({:ssl_closed, _}, state) do
       {:noreply, state}
     end
-    # TODO: 
+    # TODO:
     # def handle_call({:tx_receipt, {contract_name, tx_hash}}, _from, state) do
     #   contract_info = state[contract_name]
     #   Logger.warn "TODO: check Contract.ex -> handle_call({:tx_receipt, {contract_name, tx_hash}}, _from, state)"
