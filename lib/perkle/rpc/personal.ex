@@ -110,7 +110,7 @@ defmodule Perkle.Personal do
       password
     ]
     Logger.warn "#{inspect params}"
-    case __MODULE__.send("personal_sendTransaction", params) do
+    case Transport.send("personal_sendTransaction", params) do
       {:ok, result} ->
           Logger.warn "SendTransaction result: #{inspect result}"
         {:ok, result}

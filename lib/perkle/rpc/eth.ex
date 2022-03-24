@@ -312,7 +312,7 @@ def get_filter_logs(hash) do
   end
 end
 
-@doc """
+  @doc """
   Show transaction for hash
 
   ## Example:

@@ -47,7 +47,7 @@ defmodule Perkle.Mixfile do
       {:httpoison, "~> 1.6"},
       {:poison, "~> 3.0"},
       {:hexate,  ">= 0.6.0"},
-      {:ex_abi, "~> 0.5.5"},
+      {:ex_abi, "~> 0.5.9"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.14", only: :dev},
       {:hackney, "~> 1.17"},
