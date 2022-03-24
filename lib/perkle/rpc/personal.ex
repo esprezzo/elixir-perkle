@@ -96,8 +96,8 @@ defmodule Perkle.Personal do
     gas_price_21_gwei =  "0x" <> Hexate.encode(21000000000)
     gas_price_30_gwei =  "0x" <> Hexate.encode(30000000000)
 
-    Logger.warn "wei value to send-> gas_price_21_gwei: #{gas_price_21_gwei}"
-    Logger.warn "wei value to send-> gas_200k: #{gas_200k}"
+    # Logger.warn "wei value to send-> gas_price_21_gwei: #{gas_price_21_gwei}"
+    # Logger.warn "wei value to send-> gas_200k: #{gas_200k}"
     # 20gwei = 20000000000/0x4A817C800; 27gwei = 27000000000/0x649534E00; 50gwei=50000000000/0xBA43B7400
     # 100k/0x186A0; 200k/0x30D40; 500k/0x7A120;
     params = [%{
