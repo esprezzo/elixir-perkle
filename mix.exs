@@ -42,7 +42,7 @@ defmodule Perkle.Mixfile do
 
   defp deps do
     [
-      {:tesla, "~> 1.4"},
+      {:tesla, "~> 2.0"},
       # {:ex_keccak, "~> 0.3.0"},
       {:httpoison, "~> 1.6"},
       {:poison, "~> 3.0"},
