@@ -285,7 +285,6 @@ defmodule Perkle.Eth do
   def get_transaction_by_hash(hash) do
     case Transport.send("eth_getTransactionByHash",[hash]) do
       {:ok, txn} ->
-        decoded_txn = txn
         {:ok, txn}
       {:error, reason} ->
         {:error, reason}
@@ -363,7 +362,7 @@ end
   def new_filter(map) do
     case Transport.send("eth_newFilter",[map]) do
       {:ok, res} ->
-        Logger.warn "Perkle.Eth.new_filter"
+        Logger.warning "Perkle.Eth.new_filter"
         {:ok, res}
       {:error, reason} ->
         {:error, reason}
@@ -389,17 +388,15 @@ end
   def get_transaction_receipt_by_hash(hash) do
     case Transport.send("eth_getTransactionReceipt",[hash]) do
       {:ok, txn} ->
-        decoded_txn = txn
         {:ok, txn}
       {:error, reason} ->
         {:error, reason}
     end
   end
   @spec get_transaction_receipt_by_hash(Currency.t(), binary()) :: {:ok, binary()} | {:error, String.t}
-  def get_transaction_receipt_by_hash(currency, hash) do
+  def get_transaction_receipt_by_hash(_, hash) do
     case Transport.send("eth_getTransactionReceipt",[hash]) do
       {:ok, txn} ->
-        decoded_txn = txn
         {:ok, txn}
       {:error, reason} ->
         {:error, reason}
@@ -409,7 +406,7 @@ end
   @doc """
   """
   def eth_call(params) do
-    [h | t] = params
+    [h | _] = params
     case Transport.send("eth_call", [h, "latest"], false) do
       {:ok, result} ->
         {:ok, result}
@@ -421,7 +418,7 @@ end
   @doc """
   """
   def eth_send_transaction(params) do
-    [h | t] = params
+    [h | _] = params
     case Transport.send("eth_sendTransaction", [h], false) do
       {:ok, result} ->
         {:ok, result}
@@ -433,31 +430,31 @@ end
   # PENDING ADDITIONS
   @doc false
   @spec get_storage_at(String.t) :: {:ok, integer} | {:error, String.t}
-  def get_storage_at(hash) do
+  def get_storage_at(_hash) do
     {:error, "pending"}
   end
 
   @doc false
   @spec block_transaction_count_by_hash(String.t) :: {:ok, integer} | {:error, String.t}
-  def block_transaction_count_by_hash(hash) do
+  def block_transaction_count_by_hash(_hash) do
     {:error, "pending"}
   end
 
   @doc false
   @spec block_transaction_count_by_number(integer) :: {:ok, integer} | {:error, String.t}
-  def block_transaction_count_by_number(n) do
+  def block_transaction_count_by_number(_n) do
     {:error, "pending"}
   end
 
   @doc false
   @spec uncle_count_by_block_hash(String.t) :: {:ok, integer} | {:error, String.t}
-  def uncle_count_by_block_hash(hash) do
+  def uncle_count_by_block_hash(_hash) do
     {:error, "pending"}
   end
 
   @doc false
   @spec uncle_count_by_block_number(integer) :: {:ok, integer} | {:error, String.t}
-  def uncle_count_by_block_number(n) do
+  def uncle_count_by_block_number(_n) do
     {:error, "pending"}
   end
 

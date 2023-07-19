@@ -3,7 +3,7 @@ defmodule Perkle.ABI do
   @spec load_abi(binary()) :: list() | {:error, atom()}
   @doc "Loads the abi at the file path and reformats it to a map"
   def load_abi(file_path) do
-    file = File.read(Path.join(System.cwd(), file_path))
+    file = File.read(Path.join(File.cwd(), file_path))
 
     case file do
       {:ok, abi} -> __MODULE__.reformat_abi(Poison.Parser.parse!(abi, %{}))
@@ -117,7 +117,7 @@ defmodule Perkle.ABI do
 
     {:ok, trim_output} =
       String.slice(output, 2..String.length(output)) |> Base.decode16(case: :lower)
-    decoded = output |> Base.decode16(case: :lower)
+    _ = output |> Base.decode16(case: :lower)
     output_types = Enum.map(abi[name]["outputs"], fn x -> x["type"] end)
     # types_signature = Enum.join(["(", Enum.join(output_types, ","), ")"])
     types_signature = Enum.join([Enum.join(output_types, ",")])

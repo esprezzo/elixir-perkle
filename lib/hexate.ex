@@ -33,9 +33,15 @@ defmodule Hexate do
   def encode(int, digits) when is_integer(int) do
     int
     |> Integer.to_string(16)
-    |> String.downcase
-    |> String.rjust(digits, ?0)
+    |> String.downcase()
+    |> String.pad_leading(digits, "0")
   end
+  # def encode(int, digits) when is_integer(int) do
+  #   int
+  #   |> Integer.to_string(16)
+  #   |> String.downcase
+  #   |> String.rjust(digits, ?0)
+  # end
 
   def encode(float, digits) when is_float(float) do
     encode(round(float), digits)
@@ -77,7 +83,7 @@ defmodule Hexate do
 
   def encode_to_list(int) when is_integer(int) do
     int
-    |> Integer.to_char_list(16)
+    |> Integer.to_charlist(16)
     |> :string.to_lower
   end
 

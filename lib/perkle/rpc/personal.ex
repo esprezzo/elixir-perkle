@@ -18,6 +18,9 @@ defmodule Perkle.Personal do
   """
   @spec new_account(password :: String.t, password_confirmation :: String.t) :: {:ok, String.t} | {:error, String.t}
   def new_account(password, password_confirmation) do
+    if password != password_confirmation do
+      {:error, "Password and password confirmation do not match"}
+    end
     case Transport.send("personal_newAccount",[password]) do
       {:ok, account_hash} ->
         {:ok, account_hash}
@@ -87,13 +90,13 @@ defmodule Perkle.Personal do
   def send_transaction(from, to, value, password) do
     wei_value = Conversion.to_wei(value, :ether)
     hex_wei_value = "0x" <> Hexate.encode(wei_value)
-    gas_21k = "0x" <> Hexate.encode(21000)
-    gas_100k = "0x" <> Hexate.encode(100000)
+    # gas_21k = "0x" <> Hexate.encode(21000)
+    # gas_100k = "0x" <> Hexate.encode(100000)
     gas_200k = "0x" <> Hexate.encode(200000)
-    gas_300k = "0x" <> Hexate.encode(300000)
+    # gas_300k = "0x" <> Hexate.encode(300000)
 
-    gas_price_20_gwei =  "0x" <> Hexate.encode(20000000000)
-    gas_price_21_gwei =  "0x" <> Hexate.encode(21000000000)
+    # gas_price_20_gwei =  "0x" <> Hexate.encode(20000000000)
+    # gas_price_21_gwei =  "0x" <> Hexate.encode(21000000000)
     gas_price_30_gwei =  "0x" <> Hexate.encode(30000000000)
 
     # Logger.warn "wei value to send-> gas_price_21_gwei: #{gas_price_21_gwei}"
@@ -101,18 +104,18 @@ defmodule Perkle.Personal do
     # 20gwei = 20000000000/0x4A817C800; 27gwei = 27000000000/0x649534E00; 50gwei=50000000000/0xBA43B7400
     # 100k/0x186A0; 200k/0x30D40; 500k/0x7A120;
     params = [%{
-      "from": from,
-      "to": to,
-      "gas": gas_200k,
-      "gasPrice": gas_price_30_gwei,
-      "value": hex_wei_value
+      from: from,
+      to: to,
+      gas: gas_200k,
+      gasPrice: gas_price_30_gwei,
+      value: hex_wei_value
       },
       password
     ]
-    Logger.warn "#{inspect params}"
+    Logger.warning("#{inspect params}")
     case Transport.send("personal_sendTransaction", params) do
       {:ok, result} ->
-          Logger.warn "SendTransaction result: #{inspect result}"
+          Logger.warning "SendTransaction result: #{inspect result}"
         {:ok, result}
       {:error, reason} ->
         {:error, reason}

@@ -168,50 +168,6 @@ defmodule Perkle.Contract do
       ]
     end
 
-    # Helpers
-    def deploy_helper(bin, abi, args) do
-      constructor_arg_data =
-        if arguments = args[:args] do
-          constructor_abi =
-            Enum.find(abi, fn {_, v} ->
-              v["type"] == "constructor"
-            end)
-
-          if constructor_abi do
-            {_, constructor} = constructor_abi
-            input_types = Enum.map(constructor["inputs"], fn x -> x["type"] end)
-            types_signature = Enum.join(["(", Enum.join(input_types, ","), ")"])
-
-            arg_count = Enum.count(arguments)
-            input_types_count = Enum.count(input_types)
-
-            if input_types_count != arg_count do
-              raise "Number of provided arguments to constructor is incorrect. Was given #{
-                      arg_count
-                    } args, looking for #{input_types_count}."
-            end
-            bin <> (Perkle.encode_abi_data(types_signature, arguments) |> Base.encode16(case: :lower))
-          else
-            # IO.warn("Could not find a constructor")
-            bin
-          end
-        else
-          bin
-        end
-
-      gas = Perkle.encode_option(args[:options][:gas])
-
-      tx = %{
-        from: args[:options][:from],
-        data: "0x#{constructor_arg_data}",
-        gas: gas
-      }
-
-      # Return the tx immediately here
-      # Recursively wait for receipt in outer function
-      {:ok, tx_hash} = Perkle.eth_send([tx])
-    end
-
     def eth_call_helper(address, abi, method_name, args) do
       result =
         Perkle.eth_call([
@@ -380,7 +336,7 @@ defmodule Perkle.Contract do
                 "(address)" ->
                   Perkle.unhex(topic_data)
                   |> Perkle.to_hex()
-                other -> Perkle.decode_abi_data(topic_type, topic_data)
+                _ -> Perkle.decode_abi_data(topic_type, topic_data)
               end
             end)
           Enum.zip(event_attributes[:topic_names], decoded_topics) |> Enum.into(%{})
@@ -427,7 +383,7 @@ defmodule Perkle.Contract do
       event_attributes =
         get_event_attributes(state, filter_info[:contract_name], filter_info[:event_name])
       {:ok, logs} = Perkle.get_filter_logs("0x" <> filter_id)
-      Logger.warn "handle_call({:get_filter_logs)"
+      Logger.warning "handle_call({:get_filter_logs)"
       formatted_logs =
         if logs != [] do
           Enum.map(logs, fn log ->
@@ -461,7 +417,7 @@ defmodule Perkle.Contract do
 
       {:ok, logs} = Perkle.get_filter_changes(filter_id)
 
-      Logger.warn "handle_call({:get_filter_changes)"
+      Logger.warning "handle_call({:get_filter_changes)"
       formatted_logs =
         if logs != [] do
           Enum.map(logs, fn log ->
@@ -486,22 +442,6 @@ defmodule Perkle.Contract do
         end
 
       {:reply, {:ok, formatted_logs}, state}
-    end
-
-    # All callbacks below
-    def handle_call({:deploy, {name, args}}, _from, state) do
-      contract_info = state[name]
-
-      with {:ok, _} <- check_option(args[:options][:from], :missing_sender),
-           {:ok, _} <- check_option(args[:options][:gas], :missing_gas),
-           {:ok, bin} <- check_option([state[:bin], args[:bin]], :missing_binary) do
-        #{contract_addr, tx_hash} = deploy_helper(bin, contract_info[:abi], args)
-        {:ok, tx_hash} = deploy_helper(bin, contract_info[:abi], args)
-        result = {:ok, tx_hash}
-        {:reply, result, state}
-      else
-        err -> {:reply, err, state}
-      end
     end
 
     def handle_call({:address, name}, _from, state) do

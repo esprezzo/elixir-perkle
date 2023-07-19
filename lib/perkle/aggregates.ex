@@ -14,7 +14,7 @@ defmodule Perkle.Aggregates do
   """
   @spec get_recent_averages(integer()) :: {:ok, float(), float(), float()} | {:error, String.t}
   def get_recent_averages(sample_size) do
-    blocks = get_recent_blocks(sample_size) 
+    blocks = get_recent_blocks(sample_size)
     average_difficulty = get_average_difficulty(blocks)
     average_blocktime = get_average_blocktime(blocks)
     average_nethash = average_difficulty / average_blocktime
@@ -25,18 +25,18 @@ defmodule Perkle.Aggregates do
   Get a recent chunk of blocks
 
   ## Example:
-      
+
       iex> Perkle.get_recent_blocks(10)
-  
+
   """
   @spec get_recent_blocks(binary()) :: float
   def get_recent_blocks(sample_size) do
     {:ok, highest_block_num} = Perkle.block_number()
     range_floor = highest_block_num - (sample_size - 1)
     range = highest_block_num..range_floor
-    blocks = Enum.map(range, fn blocknum -> 
-      {ok, block} = 
-        blocknum 
+    _ = Enum.map(range, fn blocknum ->
+      {:ok, block} =
+        blocknum
           |> Perkle.get_block_by_number()
       block
     end)
@@ -54,8 +54,8 @@ defmodule Perkle.Aggregates do
   def get_average_blocktime(blocks) do
     [head | tail ] = blocks
     last_timestamp = head["timestamp"] |> Perkle.unhex()
-    {_, sample_total} = Enum.reduce(tail, {last_timestamp, 0}, 
-      fn(block, {previous_timestamp, interval_total}) -> 
+    {_, sample_total} = Enum.reduce(tail, {last_timestamp, 0},
+      fn(block, {previous_timestamp, interval_total}) ->
         current_timestamp = Perkle.unhex(block["timestamp"])
         interval = previous_timestamp - current_timestamp
         interval_total = interval_total + interval
@@ -68,7 +68,7 @@ defmodule Perkle.Aggregates do
   Get average difficulty from sample set of blocks
 
   ## Example:
-        
+
       iex> Perkle.get_average_difficulty(blocks)
 
   """
@@ -76,27 +76,27 @@ defmodule Perkle.Aggregates do
   def get_average_difficulty(blocks) do
     [first_block | _ ] = blocks
     seed_acc = first_block["difficulty"] |> Perkle.unhex()
-    total_diff = Enum.reduce(blocks, seed_acc, fn(block, acc) -> 
+    total_diff = Enum.reduce(blocks, seed_acc, fn(block, acc) ->
       acc + Perkle.unhex(block["difficulty"])
     end)
-    average_diff = total_diff / Enum.count(blocks)
+    total_diff / Enum.count(blocks)
   end
 
   @doc """
   Get recent blocktimes as useful for a timeseries history chart
 
   ## Example:
-      
+
       iex> Perkle.Aggregates.get_recent_blocktimes(20)
-  
+
   """
   @spec get_recent_blocktimes(integer()) :: List.t()
   def get_recent_blocktimes(sample_size) do
     all = get_recent_blocks(sample_size + 1) |> Enum.reverse() # |> Enum.map(fn x -> Map.put(x, "number_int", Perkle.unhex(x["number"])) end)
     [head | tail ] = all
     last_timestamp = head |> Map.get("timestamp") |> Perkle.unhex()
-    {_, recent_blocktimes} = Enum.reduce(tail, {last_timestamp, []}, 
-    fn(block, {previous_timestamp, all_intervals}) -> 
+    {_, recent_blocktimes} = Enum.reduce(tail, {last_timestamp, []},
+    fn(block, {previous_timestamp, all_intervals}) ->
       current_timestamp = Perkle.unhex(block["timestamp"])
       interval = current_timestamp - previous_timestamp
       number = Perkle.unhex(block["number"])
@@ -111,15 +111,15 @@ defmodule Perkle.Aggregates do
   ## Example:
 
       iex> Perkle.get_recent_blocktimes(20)
-  
+
   """
   @spec get_recent_blocks_with_blocktimes(integer()) :: List.t()
   def get_recent_blocks_with_blocktimes(sample_size) do
     all = get_recent_blocks(sample_size + 1) |> Enum.reverse()
     [head | tail ] = all
     last_timestamp = head |> Map.get("timestamp") |> Perkle.unhex()
-    {_, recent_blocks} = Enum.reduce(tail, {last_timestamp, []}, 
-    fn(block, {previous_timestamp, blocks}) -> 
+    {_, recent_blocks} = Enum.reduce(tail, {last_timestamp, []},
+    fn(block, {_, blocks}) ->
       current_timestamp = Perkle.unhex(block["timestamp"])
       # interval = :os.system_time(:seconds) - previous_timestamp
       number = Perkle.unhex(block["number"])
@@ -138,7 +138,7 @@ defmodule Perkle.Aggregates do
   @doc """
   Get transactions count for recent blocks as useful for a timeseries history chart.
 
-  ## Example: 
+  ## Example:
 
       iex> Perkle.get_recent_transactions_per_block(20)
 
@@ -146,26 +146,19 @@ defmodule Perkle.Aggregates do
   @spec get_recent_transactions_per_block(integer) :: List.t()
   def get_recent_transactions_per_block(sample_size) do
     blocks = get_recent_blocks(sample_size)
-    recent_transactions_per_block = Enum.map(blocks, fn block -> 
+    _ = Enum.map(blocks, fn block ->
       number = Perkle.unhex(block["number"])
       txn_count = Enum.count(block["transactions"])
       [number, txn_count]
-    end) 
+    end)
     |> Enum.reverse()
   end
 
-  @doc """
-  Decode the extra_data field on a block // private
-
-  ## Example: 
-      
-      iex> decode_extra(data)
-  """
-  @spec decode_extra(String.t()) :: String.t() 
+  @spec decode_extra(String.t()) :: String.t()
   defp decode_extra(input) do
     if input do
       case input |> String.slice(2..-1) |> String.upcase |> Base.decode16 do
-        {:ok, str} -> 
+        {:ok, str} ->
           case String.valid?(str) do
             true -> str
             false -> false
@@ -177,5 +170,5 @@ defmodule Perkle.Aggregates do
     end
   end
 
-  
+
 end
